@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>鳥居ゲーム</title>
     <style>
         body {
@@ -17,6 +17,7 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            position: relative;
         }
         .active {
             display: flex;
@@ -29,14 +30,33 @@
             margin: 10px;
             border-radius: 5px;
             cursor: pointer;
+            z-index: 2;
+            position: absolute;
+            bottom: 20%;
         }
         .torii {
             display: inline-block;
             margin: 20px;
             cursor: pointer;
+            width: 30%;
+            max-width: 200px;
+            height: auto;
+            z-index: 2;
+            position: relative;
         }
         #result .bells {
             margin-top: 20px;
+            z-index: 2;
+            position: relative;
+        }
+        img.fullscreen-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
         }
     </style>
 </head>
@@ -44,27 +64,56 @@
 
     <!-- タイトル画面 -->
     <div id="title" class="screen active">
-        <img src="background.jpg" alt="背景イラスト" style="width: 100%; height: auto;">
-        <h1><img src="title.png" alt="タイトル画像"></h1>
+        <img src="background.jpg" alt="背景イラスト" class="fullscreen-bg">
+        <h1 style="z-index: 2; position: relative;"><img src="title.png" alt="タイトル画像"></h1>
         <button class="button" onclick="startGame()">はじめる</button>
     </div>
 
     <!-- ゲーム画面 -->
     <div id="game" class="screen">
-        <img src="background.jpg" alt="背景イラスト" style="width: 100%; height: auto; position: absolute; top: 0; left: 0; z-index: -1;">
-        <p id="round">1回目</p>
+        <img id="background" alt="背景イラスト" class="fullscreen-bg">
+        <p id="round" style="z-index: 2; position: relative;">1回目</p>
         <div>
-            <img src="torii1.png" alt="鳥居1" class="torii" onclick="selectTorii(1)">
-            <img src="torii2.png" alt="鳥居2" class="torii" onclick="selectTorii(2)">
+            <img id="torii1" alt="鳥居1" class="torii" onclick="selectTorii(1)">
+            <img id="torii2" alt="鳥居2" class="torii" onclick="selectTorii(2)">
         </div>
     </div>
+    <script>
+        // 背景イラストの配列
+        const backgrounds = ['91363.png', '91364.png', '91365.png', '91366.png', '91367.png', '91368.png', '91369.png', '91370.png', '91371.png', '91372.png'];
+
+        // 鳥居の画像の配列
+        const toriiImages = ['torii1.png', 'torii2.png', 'torii3.png', 'torii4.png', 'torii5.png', 'torii6.png', 'torii7.png'];
+
+        // ランダムに背景イラストを選択
+        function setRandomBackground() {
+            const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+            document.getElementById('background').src = randomBackground;
+        }
+
+        // ランダムに鳥居の画像を設定
+        function setRandomToriiImages() {
+            const randomTorii1 = toriiImages[Math.floor(Math.random() * toriiImages.length)];
+            let randomTorii2;
+            do {
+                randomTorii2 = toriiImages[Math.floor(Math.random() * toriiImages.length)];
+            } while (randomTorii1 === randomTorii2);
+
+            document.getElementById('torii1').src = randomTorii1;
+            document.getElementById('torii2').src = randomTorii2;
+        }
+
+        setRandomBackground();
+        setRandomToriiImages();
+
+    </script>
 
     <!-- リザルト画面 -->
     <div id="result" class="screen">
-        <img src="background.jpg" alt="背景イラスト" style="width: 100%; height: auto;">
-        <h2>結果</h2>
-        <p id="correctCount">正解した回数: 0</p>
-        <div class="bells"></div>
+        <img src="91374.png" alt="背景イラスト" class="fullscreen-bg">
+        <h2 style="z-index: 2; position: relative;">結果</h2>
+        <p id="correctCount" style="z-index: 2; position: relative;">正解した回数: 0</p>
+        <div class="bells" style="z-index: 2; position: relative;"></div>
         <button class="button" onclick="goToTitle()">タイトルへ</button>
     </div>
 
@@ -81,6 +130,8 @@
             correctCount = 0;
             updateRound();
             setRandomTorii();
+            setRandomToriiImages();
+            setRandomBackground();
         }
 
         function setRandomTorii() {
@@ -99,6 +150,8 @@
                 round++;
                 updateRound();
                 setRandomTorii();
+                setRandomToriiImages();
+                setRandomBackground();
             } else {
                 endGame();
             }
