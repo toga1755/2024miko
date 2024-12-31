@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鳥居ゲーム</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+        }
+        .screen {
+            display: none;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .active {
+            display: flex;
+        }
+        .button {
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .torii {
+            display: inline-block;
+            margin: 20px;
+            cursor: pointer;
+        }
+        #result .bells {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- タイトル画面 -->
+    <div id="title" class="screen active">
+        <img src="background.jpg" alt="背景イラスト" style="width: 100%; height: auto;">
+        <h1><img src="title.png" alt="タイトル画像"></h1>
+        <button class="button" onclick="startGame()">はじめる</button>
+    </div>
+
+    <!-- ゲーム画面 -->
+    <div id="game" class="screen">
+        <img src="background.jpg" alt="背景イラスト" style="width: 100%; height: auto; position: absolute; top: 0; left: 0; z-index: -1;">
+        <p id="round">1回目</p>
+        <div>
+            <img src="torii1.png" alt="鳥居1" class="torii" onclick="selectTorii(1)">
+            <img src="torii2.png" alt="鳥居2" class="torii" onclick="selectTorii(2)">
+        </div>
+    </div>
+
+    <!-- リザルト画面 -->
+    <div id="result" class="screen">
+        <img src="background.jpg" alt="背景イラスト" style="width: 100%; height: auto;">
+        <h2>結果</h2>
+        <p id="correctCount">正解した回数: 0</p>
+        <div class="bells"></div>
+        <button class="button" onclick="goToTitle()">タイトルへ</button>
+    </div>
+
+    <script>
+        let correctTorii = 0;
+        let round = 1;
+        let maxRounds = 35;
+        let correctCount = 0;
+
+        function startGame() {
+            document.getElementById('title').classList.remove('active');
+            document.getElementById('game').classList.add('active');
+            round = 1;
+            correctCount = 0;
+            updateRound();
+            setRandomTorii();
+        }
+
+        function setRandomTorii() {
+            correctTorii = Math.floor(Math.random() * 2) + 1;
+        }
+
+        function updateRound() {
+            document.getElementById('round').textContent = `${round}回目`;
+        }
+
+        function selectTorii(selected) {
+            if (selected === correctTorii) {
+                correctCount++;
+            }
+            if (round < maxRounds) {
+                round++;
+                updateRound();
+                setRandomTorii();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('game').classList.remove('active');
+            document.getElementById('result').classList.add('active');
+            document.getElementById('correctCount').textContent = `正解した回数: ${correctCount}`;
+            const bells = document.querySelector('.bells');
+            bells.innerHTML = '';
+            for (let i = 0; i < correctCount; i++) {
+                const bell = document.createElement('span');
+                bell.textContent = '🔔';
+                bells.appendChild(bell);
+            }
+        }
+
+        function goToTitle() {
+            document.getElementById('result').classList.remove('active');
+            document.getElementById('title').classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
