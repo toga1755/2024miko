@@ -70,6 +70,12 @@
 </head>
 <body>
 
+    <!-- BGM -->
+    <audio id="bgm" loop>
+        <source src="bgm.mp3" type="audio/mpeg">
+        お使いのブラウザはオーディオタグをサポートしていません。
+    </audio>
+
     <!-- タイトル画面 -->
     <div id="title" class="screen active">
         <h1 class="text-shadow text-background" style="z-index: 2; position: relative;">
@@ -105,6 +111,9 @@
         // 鳥居の画像の配列
         const toriiImages = ['torii1.png', 'torii2.png', 'torii3.png', 'torii4.png', 'torii5.png', 'torii6.png', 'torii7.png'];
 
+        // BGMの再生
+        const bgm = document.getElementById('bgm');
+
         // ランダムに背景イラストを選択
         function setRandomBackground() {
             const randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
@@ -129,12 +138,14 @@
         function showHowToPlay() {
             document.getElementById('title').classList.remove('active');
             document.getElementById('howToPlay').classList.add('active');
+            bgm.play(); // BGMを再生
         }
 
         function goToTitle() {
             document.getElementById('howToPlay').classList.remove('active');
             document.getElementById('result').classList.remove('active');
             document.getElementById('title').classList.add('active');
+            bgm.play(); // BGMを再生
         }
 
         function startGame() {
@@ -147,6 +158,7 @@
             setRandomTorii();
             setRandomToriiImages();
             setRandomBackground();
+            bgm.play(); // BGMを再生
         }
 
         function setRandomTorii() {
@@ -183,6 +195,7 @@
                 bell.textContent = '🔔';
                 bells.appendChild(bell);
             }
+            bgm.play(); // BGMを再生
         }
     </script>
 
