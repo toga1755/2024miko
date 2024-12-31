@@ -10,6 +10,7 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f0f8ff;
+            font-size: 25px; /* フォントサイズを大きく */
         }
         .screen {
             display: none;
@@ -31,8 +32,7 @@
             border-radius: 5px;
             cursor: pointer;
             z-index: 2;
-            position: absolute;
-            bottom: 20%;
+            font-size: 1.2em; /* ボタンのフォントサイズを大きく */
         }
         .torii {
             display: inline-block;
@@ -58,21 +58,41 @@
             object-fit: cover;
             z-index: 1;
         }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* 文字にシャドウを追加 */
+        }
+        .text-background {
+            background-color: rgba(255, 255, 255, 0.7); /* 文字に背景色を追加 */
+            padding: 5px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
 
     <!-- タイトル画面 -->
     <div id="title" class="screen active">
-        <img src="background.jpg" alt="背景イラスト" class="fullscreen-bg">
-        <h1 style="z-index: 2; position: relative;"><img src="title.png" alt="タイトル画像"></h1>
-        <button class="button" onclick="startGame()">はじめる</button>
+        <h1 class="text-shadow text-background" style="z-index: 2; position: relative;">
+            <img src="title.png" alt="タイトル画像" style="width: 100%; height: auto;">
+        </h1>
+        <button class="button" style="position: absolute; bottom: 20%;" onclick="startGame()">はじめる</button>
+        <button class="button" style="position: absolute; bottom: 10%;" onclick="showHowToPlay()">遊び方</button>
+    </div>
+
+    <!-- 遊び方画面 -->
+    <div id="howToPlay" class="screen">
+        <h2 class="text-shadow text-background" style="z-index: 2; position: relative; font-size: 2em;">遊び方</h2>
+        <p class="text-shadow text-background" style="z-index: 2; position: relative; font-size: 1.5em;">
+            画面に表示される鳥居の中から、正しい鳥居（ランダムでどちらかが正解）を選んでください。<br>
+            35回の挑戦が終わったら、正解した回数が表示されます。
+        </p>
+        <button class="button" onclick="goToTitle()">戻る</button>
     </div>
 
     <!-- ゲーム画面 -->
     <div id="game" class="screen">
         <img id="background" alt="背景イラスト" class="fullscreen-bg">
-        <p id="round" style="z-index: 2; position: relative;">1回目</p>
+        <p id="round" class="text-shadow text-background" style="z-index: 2; position: relative; font-size: 1.5em;">1回目</p> <!-- フォントサイズを大きく -->
         <div>
             <img id="torii1" alt="鳥居1" class="torii" onclick="selectTorii(1)">
             <img id="torii2" alt="鳥居2" class="torii" onclick="selectTorii(2)">
@@ -106,28 +126,23 @@
         setRandomBackground();
         setRandomToriiImages();
 
-    </script>
+        function showHowToPlay() {
+            document.getElementById('title').classList.remove('active');
+            document.getElementById('howToPlay').classList.add('active');
+        }
 
-    <!-- リザルト画面 -->
-    <div id="result" class="screen">
-        <img src="91374.png" alt="背景イラスト" class="fullscreen-bg">
-        <h2 style="z-index: 2; position: relative;">結果</h2>
-        <p id="correctCount" style="z-index: 2; position: relative;">正解した回数: 0</p>
-        <div class="bells" style="z-index: 2; position: relative;"></div>
-        <button class="button" onclick="goToTitle()">タイトルへ</button>
-    </div>
-
-    <script>
-        let correctTorii = 0;
-        let round = 1;
-        let maxRounds = 35;
-        let correctCount = 0;
+        function goToTitle() {
+            document.getElementById('howToPlay').classList.remove('active');
+            document.getElementById('result').classList.remove('active');
+            document.getElementById('title').classList.add('active');
+        }
 
         function startGame() {
             document.getElementById('title').classList.remove('active');
             document.getElementById('game').classList.add('active');
             round = 1;
             correctCount = 0;
+            maxRounds = 35; // maxRoundsを定義
             updateRound();
             setRandomTorii();
             setRandomToriiImages();
@@ -169,12 +184,16 @@
                 bells.appendChild(bell);
             }
         }
-
-        function goToTitle() {
-            document.getElementById('result').classList.remove('active');
-            document.getElementById('title').classList.add('active');
-        }
     </script>
+
+    <!-- リザルト画面 -->
+    <div id="result" class="screen">
+        <img src="91374.png" alt="背景イラスト" class="fullscreen-bg">
+        <h2 class="text-shadow text-background" style="z-index: 2; position: relative; font-size: 2em;">結果</h2> <!-- フォントサイズを大きく -->
+        <p id="correctCount" class="text-shadow text-background" style="z-index: 2; position: relative; font-size: 1.5em;">正解した回数: 0</p> <!-- フォントサイズを大きく -->
+        <div class="bells" style="z-index: 2; position: relative;"></div>
+        <button class="button" onclick="goToTitle()">タイトルへ</button>
+    </div>
 
 </body>
 </html>
